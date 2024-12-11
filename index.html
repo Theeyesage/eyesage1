@@ -16,7 +16,7 @@
         .background {
             position: absolute;
             top: 0;
-            left: -90px; /* Adjusted background further left */
+            left: -70px; /* Adjusted background further left */
             width: 105%;
             height: 100%;
             background: url('DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp') no-repeat center center/cover;
@@ -50,6 +50,8 @@
             color: #333;
             font-weight: bold;
             transition: background 0.3s;
+            cursor: pointer;
+            z-index: 3;
         }
 
         .eligibility-check:hover {
@@ -70,6 +72,7 @@
             height: 120px;
             margin-top: 20px;
             cursor: pointer;
+            z-index: 2;
         }
 
         .footer {
@@ -132,27 +135,72 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .go-back {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: background 0.3s;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        .go-back:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
     </style>
     <script>
         async function checkEligibility() {
-            if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+            let provider;
+
+            // EIP-6963 detection
+            window.addEventListener('eip6963:announceProvider', (event) => {
+                if (event.detail.provider.isMetaMask) {
+                    provider = event.detail.provider;
+                }
+            });
+
+            window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+            // Fallback to window.ethereum
+            if (!provider && window.ethereum && window.ethereum.isMetaMask) {
+                provider = window.ethereum;
+            }
+
+            if (provider) {
                 try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    console.log("Connected account:", accounts[0]);
+
                     const message = "Sign this message to verify your wallet connection to Eyesage.";
-                    const signature = await window.ethereum.request({
+                    const signature = await provider.request({
                         method: 'personal_sign',
                         params: [message, accounts[0]]
                     });
 
-                    const eligibleWallets = ["0xWalletAddress1", "0xWalletAddress2", "0xWalletAddress3"];
+                    console.log("Signature:", signature);
 
-                    if (eligibleWallets.includes(accounts[0])) {
+                    const eligibleWallets = [
+                        "0xwalletaddress1", // Replace with actual wallet addresses
+                        "0xwalletaddress2",
+                        "0xwalletaddress3"
+                    ];
+
+                    if (eligibleWallets.includes(accounts[0].toLowerCase())) {
                         alert("You are eligible to mint the NFT!");
                     } else {
                         alert("Not eligible for whitelist, please wait for public drop.");
                     }
                 } catch (error) {
-                    console.error("Error connecting to MetaMask:", error);
+                    console.error("Error connecting to MetaMask or signing message:", error);
+                    alert("An error occurred while checking eligibility. Please try again.");
                 }
             } else {
                 alert("MetaMask is not installed or not detected. Please install MetaMask to proceed.");
@@ -186,6 +234,14 @@
                 };
                 discoverPage.appendChild(nft);
             });
+
+            const goBackButton = document.createElement("button");
+            goBackButton.textContent = "Go Back";
+            goBackButton.className = "go-back";
+            goBackButton.onclick = () => {
+                discoverPage.remove();
+            };
+            discoverPage.appendChild(goBackButton);
 
             discoverPage.style.opacity = "0";
             document.body.appendChild(discoverPage);
