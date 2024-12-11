@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyesage - NFT Project</title>
+    <style>
+        @font-face {
+            font-family: 'Dune Rise';
+            src: url('Dune_Rise.woff2') format('woff2'),
+                 url('Dune_Rise.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+            overflow: auto;
+        }
+        .background {
+            background: url('Background_desert.webp') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            width: 100%;
+        }
+        .title-container, .button-container, .gif-container, .subtitle-container, .result-container {
+            position: fixed;
+            width: 100%;
+            text-align: center;
+        }
+        .title-container {
+            top: 10%;
+        }
+        .title {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        .subtitle-container {
+            top: 20%;
+        }
+        .subtitle {
+            font-size: 2rem;
+            color: black;
+        }
+        .gif-container {
+            top: 25%;
+        }
+        .result-container {
+            top: 45%;
+        }
+        .result {
+            font-size: 1.5rem;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+        .button-container {
+            top: 10%;
+            right: 10%;
+            transform: translateY(-50%);
+            text-align: right;
+        }
+        button {
+            background-color: #00ffcc;
+            border: none;
+            padding: 10px 20px;
+            color: #1a1a1a;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #00e6b3;
+        }
+        .fade-in {
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script type="text/javascript">
+        let web3;
+        let account;
+
+        async function connectWallet() {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.enable();
+                    const accounts = await web3.eth.getAccounts();
+                    account = accounts[0];
+                    document.getElementById('connectButton').innerText = account.substring(0, 6) + '...' + account.substring(account.length - 4);
+                } catch (error) {
+                    console.error("User denied account access");
+                }
+            } else {
+                alert('Please install MetaMask!');
+            }
+        }
+
+        async function registerInterest() {
+            if (!account) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+            try {
+                const templateParams = {
+                    from_name: account,
+                    message: 'This wallet address is interested in minting: ' + account
+                };
+
+                const response = await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams);
+                if (response.status === 200) {
+                    alert('Your interest has been registered successfully!');
+                } else {
+                    alert('Failed to register interest.');
+                }
+            } catch (error) {
+                console.error('Failed to register interest:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="background">
+        <div class="title-container">
+            <img src="fontbolt.png" alt="Eyesage Title" class="title">
+        </div>
+        <div class="subtitle-container">
+            <div class="subtitle">The NFT Collection</div>
+        </div>
+        <div class="gif-container">
+            <img src="gem.gif" alt="Rotating Gem">
+        </div>
+        <div class="result-container" id="resultContainer"></div>
+        <div class="button-container">
+            <button id="connectButton" onclick="connectWallet()">Connect Wallet</button>
+            <button onclick="registerInterest()">Register for Minting</button>
+        </div>
+    </div>
+</body>
+</html>

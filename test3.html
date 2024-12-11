@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eyesage</title>
+    <link rel="icon" href="88aebe15-cdda-415d-a69f-2eb4cee7ae46.png" type="image/png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: -90px; /* Adjusted background further left */
+            width: 105%;
+            height: 100%;
+            background: url('DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp') no-repeat center center/cover;
+            z-index: -1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 2;
+        }
+
+        .header img {
+            height: 50px;
+        }
+
+        .eligibility-check {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .eligibility-check:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            z-index: 1;
+        }
+
+        .gem {
+            width: 120px;
+            height: 120px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            color: white;
+            font-size: 14px;
+            z-index: 2;
+        }
+
+        .discover-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('DALL·E 2024-12-09 21.06.08 - A detailed anime-style interior view of a dystopian post-apocalyptic palace. The perspective is from someone just entering the grand hall. The design .webp') no-repeat center center/cover;
+            background-size: cover;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .nft {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .nft:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .discover-page button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function checkEligibility() {
+            if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const message = "Sign this message to verify your wallet connection to Eyesage.";
+                    const signature = await window.ethereum.request({
+                        method: 'personal_sign',
+                        params: [message, accounts[0]]
+                    });
+
+                    const eligibleWallets = ["0xWalletAddress1", "0xWalletAddress2", "0xWalletAddress3"];
+
+                    if (eligibleWallets.includes(accounts[0])) {
+                        alert("You are eligible to mint the NFT!");
+                    } else {
+                        alert("Not eligible for whitelist, please wait for public drop.");
+                    }
+                } catch (error) {
+                    console.error("Error connecting to MetaMask:", error);
+                }
+            } else {
+                alert("MetaMask is not installed or not detected. Please install MetaMask to proceed.");
+            }
+        }
+
+        function navigateToDiscover() {
+            const discoverPage = document.createElement("div");
+            discoverPage.className = "discover-page";
+
+            const nftImages = [
+                'nft_0.png', 'nft_1.png', 'nft_2.png', 'nft_3.png', 'nft_4.png',
+                'nft_5.png', 'nft_6.png', 'nft_7.png', 'nft_8.png', 'nft_9.png'
+            ];
+
+            nftImages.forEach((img) => {
+                const nft = document.createElement("div");
+                nft.className = "nft";
+                nft.style.backgroundImage = `url('${img}')`;
+                nft.onclick = () => {
+                    const expandedView = document.createElement("div");
+                    expandedView.style.position = "fixed";
+                    expandedView.style.top = "0";
+                    expandedView.style.left = "0";
+                    expandedView.style.width = "100%";
+                    expandedView.style.height = "100%";
+                    expandedView.style.background = `rgba(0, 0, 0, 0.8) url('${img}') no-repeat center center/contain`;
+                    expandedView.style.zIndex = "2000";
+                    expandedView.onclick = () => expandedView.remove();
+                    document.body.appendChild(expandedView);
+                };
+                discoverPage.appendChild(nft);
+            });
+
+            discoverPage.style.opacity = "0";
+            document.body.appendChild(discoverPage);
+
+            setTimeout(() => {
+                discoverPage.style.opacity = "1";
+            }, 50);
+        }
+    </script>
+</head>
+<body>
+    <div class="background"></div>
+
+    <div class="header">
+        <img src="fontbolt.png" alt="Main Logo">
+    </div>
+
+    <button class="eligibility-check" onclick="checkEligibility()">Check Eligibility</button>
+
+    <div class="content">
+        <img src="gem.gif" alt="Gem Animation" class="gem" onclick="navigateToDiscover()">
+    </div>
+
+    <div class="footer">
+        &copy; 2024 Eyesage. All rights reserved.
+    </div>
+</body>
+</html>
