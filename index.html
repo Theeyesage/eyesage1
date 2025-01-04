@@ -16,7 +16,7 @@
         .background {
             position: absolute;
             top: 0;
-            left: -82px; /* Adjusted background further left */
+            left: -82px;
             width: 105%;
             height: 100%;
             background: url('DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp') no-repeat center center/cover;
@@ -105,7 +105,7 @@
             transition: opacity 0.5s ease-in-out;
         }
 
-        .nft {
+        .nft, .monte-carlo {
             width: 150px;
             height: 150px;
             background: rgba(255, 255, 255, 0.8);
@@ -120,7 +120,7 @@
             background-position: center;
         }
 
-        .nft:hover {
+        .nft:hover, .monte-carlo:hover {
             transform: scale(1.1);
             background: rgba(255, 255, 255, 1);
         }
@@ -151,6 +151,7 @@
             cursor: pointer;
             z-index: 3;
         }
+
         .go-back:hover {
             background: rgba(0, 0, 0, 0.9);
         }
@@ -217,6 +218,15 @@
                 };
                 discoverPage.appendChild(nft);
             });
+
+            // Add Monte Carlo Simulation Button
+            const monteCarloButton = document.createElement("div");
+            monteCarloButton.className = "monte-carlo";
+            monteCarloButton.textContent = "Monte Carlo";
+            monteCarloButton.onclick = () => {
+                window.location.href = "montecarlo.html"; // Replace with your simulation page link
+            };
+            discoverPage.appendChild(monteCarloButton);
 
             const goBackButton = document.createElement("button");
             goBackButton.textContent = "Go Back";
