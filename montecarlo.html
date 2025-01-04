@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="fc:frame" content='{
+        "version": "next",
+        "imageUrl": "https://example.com/monte-carlo-simulation-thumbnail.png",
+        "button": {
+            "title": "Run Monte Carlo",
+            "action": {
+                "type": "launch_frame",
+                "name": "Monte Carlo Simulation",
+                "url": "https://example.com/monte-carlo-simulation",
+                "splashImageUrl": "https://example.com/splash.png",
+                "splashBackgroundColor": "#6a0dad"
+            }
+        }
+    }' />
+    <title>Monte Carlo Simulation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #6a0dad; /* Purple background */
+            color: black; /* Black text */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #8a2be2; /* Light purple button */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #7a1fa2; /* Darker purple on hover */
+        }
+
+        .chart-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        canvas {
+            background-color: white; /* White chart background */
+        }
+
+        .footer-button {
+            margin-top: 40px; /* Increased margin to move it further down */
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Monte Carlo Simulation</h1>
+    <div>
+        <input type="text" id="cryptoTicker" placeholder="Enter Crypto Ticker (e.g., BTC)">
+        <button class="button" onclick="runSimulation()">Run Simulation</button>
+        <button class="button" onclick="resetSimulation()">Reset</button>
+    </div>
+    <p id="errorMessage" style="color: red;"></p>
+    <div class="chart-container">
+        <canvas id="simulationChart" width="800" height="400"></canvas>
+    </div>
+    <button class="button footer-button" onclick="window.open('https://www.ibm.com/think/topics/monte-carlo-simulation', '_blank')">
+        What is a Monte Carlo Simulation?
+    </button>
+
+    <script>
+        let chartInstance;
+
+        async function fetchHistoricalData(ticker) {
+            const url = `https://api.coingecko.com/api/v3/coins/${ticker}/market_chart?vs_currency=usd&days=120`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Unable to fetch historical data.");
+                const data = await response.json();
+                return data.prices.map(price => price[1]);
+            } catch (error) {
+                console.error(error);
+                throw new Error("Unable to fetch the historical data. Please check the crypto ticker.");
+            }
+        }
+
+        function calculateDailyReturns(prices) {
+            const returns = [];
+            for (let i = 1; i < prices.length; i++) {
+                returns.push((prices[i] - prices[i - 1]) / prices[i - 1]);
+            }
+            return returns;
+        }
+
+        function monteCarloSimulation(startPrice, dailyReturns, numDays = 30, numSimulations = 300) {
+            const simulations = [];
+            const avgPrices = Array(numDays).fill(0);
+
+            for (let i = 0; i < numSimulations; i++) {
+                const simulation = [startPrice];
+                for (let j = 1; j <= numDays; j++) {
+                    const randomReturn = dailyReturns[Math.floor(Math.random() * dailyReturns.length)];
+                    const nextPrice = simulation[j - 1] * (1 + randomReturn);
+                    simulation.push(nextPrice);
+                    avgPrices[j - 1] += nextPrice / numSimulations;
+                }
+                simulations.push(simulation);
+            }
+
+            return { simulations, avgPrices };
+        }
+
+        async function runSimulation() {
+            const ticker = document.getElementById("cryptoTicker").value.toLowerCase();
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.textContent = "";
+
+            try {
+                const historicalPrices = await fetchHistoricalData(ticker);
+                const startPrice = historicalPrices[historicalPrices.length - 1];
+                const dailyReturns = calculateDailyReturns(historicalPrices);
+                const { simulations, avgPrices } = monteCarloSimulation(startPrice, dailyReturns);
+
+                const ctx = document.getElementById("simulationChart").getContext("2d");
+                const datasets = simulations.map(simulation => ({
+                    data: simulation,
+                    borderColor: "rgba(75, 192, 192, 0.1)",
+                    borderWidth: 1,
+                    fill: false,
+                    pointRadius: 0,
+                }));
+                datasets.push({
+                    label: "Average Price",
+                    data: avgPrices,
+                    borderColor: "red",
+                    borderWidth: 2,
+                    fill: false,
+                });
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+
+                chartInstance = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
+                        datasets: datasets,
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Days",
+                                },
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: "Price (USD)",
+                                },
+                            },
+                        },
+                    },
+                });
+            } catch (error) {
+                errorMessage.textContent = error.message;
+            }
+        }
+
+        function resetSimulation() {
+            const errorMessage = document.getElementById("errorMessage");
+            errorMessage.textContent = "";
+            document.getElementById("cryptoTicker").value = "";
+
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+        }
+    </script>
+</body>
+</html>
