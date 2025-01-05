@@ -16,8 +16,8 @@
         .background {
             position: absolute;
             top: 0;
-            left: -82px;
-            width: 105%;
+            left: -77px;
+            width: 104%;
             height: 100%;
             background: url('DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp') no-repeat center center/cover;
             z-index: -1;
@@ -68,9 +68,9 @@
         }
 
         .gem {
-            width: 120px;
-            height: 120px;
-            margin-top: 20px;
+            width: 150px;
+            height: 150px;
+            margin-top: 15px;
             cursor: pointer;
             z-index: 2;
         }
@@ -97,43 +97,39 @@
             background-size: cover;
             z-index: 1000;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-between; /* Positions sculptures to the left and right */
             align-items: center;
-            gap: 20px;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
 
-        .nft, .monte-carlo {
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: transform 0.3s, background 0.3s;
+        .sculpture {
+            position: absolute;
             background-size: cover;
             background-position: center;
-        }
-
-        .nft:hover, .monte-carlo:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 1);
-        }
-
-        .discover-page button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: white;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .sculpture:hover {
+            transform: scale(1.1); /* Hover effect: pop out slightly */
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+        }
+
+        #sculpture1 {
+            background-image: url('sculpture1.png'); /* Replace with relative path */
+            top: calc(33%); /* Adjusted position */
+            left: -0.2%; /* Adjusted to be pushed left */
+            width: 270px; /* Dimensions kept intact */
+            height: 470px; /* Dimensions kept intact */
+        }
+
+        #sculpture2 {
+            background-image: url('sculpture2.png'); /* Replace with relative path */
+            top: calc(33%); /* Adjusted position */
+            right: -0.2%; /* Adjusted to be pushed right */
+            width: 270px; /* Dimensions kept intact */
+            height: 470px; /* Dimensions kept intact */
         }
 
         .go-back {
@@ -195,39 +191,25 @@
             const discoverPage = document.createElement("div");
             discoverPage.className = "discover-page";
 
-            const nftImages = [
-                'nft_0.png', 'nft_1.png', 'nft_2.png', 'nft_3.png', 'nft_4.png',
-                'nft_98.png','nft_5.png', 'nft_6.png', 'nft_7.png', 'nft_8.png', 'nft_9.png'
-            ];
-
-            nftImages.forEach((img) => {
-                const nft = document.createElement("div");
-                nft.className = "nft";
-                nft.style.backgroundImage = `url('${img}')`;
-                nft.onclick = () => {
-                    const expandedView = document.createElement("div");
-                    expandedView.style.position = "fixed";
-                    expandedView.style.top = "0";
-                    expandedView.style.left = "0";
-                    expandedView.style.width = "100%";
-                    expandedView.style.height = "100%";
-                    expandedView.style.background = `rgba(0, 0, 0, 0.8) url('${img}') no-repeat center center/contain`;
-                    expandedView.style.zIndex = "2000";
-                    expandedView.onclick = () => expandedView.remove();
-                    document.body.appendChild(expandedView);
-                };
-                discoverPage.appendChild(nft);
-            });
-
-            // Add Monte Carlo Simulation Button
-            const monteCarloButton = document.createElement("div");
-            monteCarloButton.className = "monte-carlo";
-            monteCarloButton.textContent = "Monte Carlo";
-            monteCarloButton.onclick = () => {
-                window.location.href = "montecarlo.html"; // Replace with your simulation page link
+            // Sculpture 1 (Monte Carlo Simulation)
+            const sculpture1 = document.createElement("div");
+            sculpture1.id = "sculpture1";
+            sculpture1.className = "sculpture";
+            sculpture1.onclick = () => {
+                window.location.href = "montecarlo.html"; // Monte Carlo simulation page
             };
-            discoverPage.appendChild(monteCarloButton);
+            discoverPage.appendChild(sculpture1);
 
+            // Sculpture 2 (NFT Gallery)
+            const sculpture2 = document.createElement("div");
+            sculpture2.id = "sculpture2";
+            sculpture2.className = "sculpture";
+            sculpture2.onclick = () => {
+                window.location.href = "nftgallery.html"; // NFT gallery page
+            };
+            discoverPage.appendChild(sculpture2);
+
+            // Go Back Button
             const goBackButton = document.createElement("button");
             goBackButton.textContent = "Go Back";
             goBackButton.className = "go-back";
