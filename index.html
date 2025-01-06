@@ -97,7 +97,7 @@
             background-size: cover;
             z-index: 1000;
             display: flex;
-            justify-content: space-between; /* Positions sculptures to the left and right */
+            justify-content: space-between;
             align-items: center;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -117,19 +117,19 @@
         }
 
         #sculpture1 {
-            background-image: url('https://raw.githubusercontent.com/Theeyesage/eyesage1/main/sculpture1.png'); /* Replace with relative path */
-            top: calc(33%); /* Adjusted position */
-            left: -0.2%; /* Adjusted to be pushed left */
-            width: 270px; /* Dimensions kept intact */
-            height: 470px; /* Dimensions kept intact */
+            background-image: url('sculpture1.png'); /* Replace with relative path */
+            top: calc(33%);
+            left: -0.2%;
+            width: 270px;
+            height: 470px;
         }
 
         #sculpture2 {
-            background-image: url('https://raw.githubusercontent.com/Theeyesage/eyesage1/main/sculpture2.png'); /* Replace with relative path */
-            top: calc(33%); /* Adjusted position */
-            right: -0.2%; /* Adjusted to be pushed right */
-            width: 270px; /* Dimensions kept intact */
-            height: 470px; /* Dimensions kept intact */
+            background-image: url('sculpture2.png'); /* Replace with relative path */
+            top: calc(33%);
+            right: -0.2%;
+            width: 270px;
+            height: 470px;
         }
 
         .go-back {
@@ -153,77 +153,59 @@
         }
     </style>
     <script>
-        async function checkEligibility() {
+        const whitelist = [
+            "0xwalletaddress1", // Replace with actual wallet addresses
+            "0xwalletaddress2",
+            "0xwalletaddress3"
+        ];
+
+        async function navigateToDiscover() {
             if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
                 try {
                     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    console.log("Connected account:", accounts[0]);
+                    const walletAddress = accounts[0].toLowerCase();
 
-                    const message = "Sign this message to verify your wallet connection to Eyesage.";
-                    const signature = await window.ethereum.request({
-                        method: 'personal_sign',
-                        params: [message, accounts[0]]
-                    });
+                    if (whitelist.includes(walletAddress)) {
+                        const discoverPage = document.createElement("div");
+                        discoverPage.className = "discover-page";
 
-                    console.log("Signature:", signature);
+                        // Sculpture 1
+                        const sculpture1 = document.createElement("div");
+                        sculpture1.id = "sculpture1";
+                        sculpture1.className = "sculpture";
+                        sculpture1.onclick = () => window.location.href = "montecarlo.html";
+                        discoverPage.appendChild(sculpture1);
 
-                    const eligibleWallets = [
-                        "0xwalletaddress1", // Replace with actual wallet addresses
-                        "0xwalletaddress2",
-                        "0xwalletaddress3"
-                    ];
+                        // Sculpture 2
+                        const sculpture2 = document.createElement("div");
+                        sculpture2.id = "sculpture2";
+                        sculpture2.className = "sculpture";
+                        sculpture2.onclick = () => window.location.href = "nftgallery.html";
+                        discoverPage.appendChild(sculpture2);
 
-                    if (eligibleWallets.includes(accounts[0].toLowerCase())) {
-                        alert("You are eligible to mint the NFT!");
+                        // Go Back Button
+                        const goBackButton = document.createElement("button");
+                        goBackButton.textContent = "Go Back";
+                        goBackButton.className = "go-back";
+                        goBackButton.onclick = () => discoverPage.remove();
+                        discoverPage.appendChild(goBackButton);
+
+                        discoverPage.style.opacity = "0";
+                        document.body.appendChild(discoverPage);
+
+                        setTimeout(() => {
+                            discoverPage.style.opacity = "1";
+                        }, 50);
                     } else {
-                        alert("Not eligible for whitelist, please wait for public drop.");
+                        alert("Access Denied: Your wallet is not whitelisted.");
                     }
                 } catch (error) {
-                    console.error("Error connecting to MetaMask or signing message:", error);
-                    alert("An error occurred while checking eligibility. Please try again.");
+                    console.error("Error connecting to MetaMask:", error);
+                    alert("An error occurred while connecting to your wallet. Please try again.");
                 }
             } else {
                 alert("MetaMask is not installed or not detected. Please install MetaMask to proceed.");
             }
-        }
-
-        function navigateToDiscover() {
-            const discoverPage = document.createElement("div");
-            discoverPage.className = "discover-page";
-
-            // Sculpture 1 (Monte Carlo Simulation)
-            const sculpture1 = document.createElement("div");
-            sculpture1.id = "sculpture1";
-            sculpture1.className = "sculpture";
-            sculpture1.onclick = () => {
-                window.location.href = "montecarlo.html"; // Monte Carlo simulation page
-            };
-            discoverPage.appendChild(sculpture1);
-
-            // Sculpture 2 (NFT Gallery)
-            const sculpture2 = document.createElement("div");
-            sculpture2.id = "sculpture2";
-            sculpture2.className = "sculpture";
-            sculpture2.onclick = () => {
-                window.location.href = "nftgallery.html"; // NFT gallery page
-            };
-            discoverPage.appendChild(sculpture2);
-
-            // Go Back Button
-            const goBackButton = document.createElement("button");
-            goBackButton.textContent = "Go Back";
-            goBackButton.className = "go-back";
-            goBackButton.onclick = () => {
-                discoverPage.remove();
-            };
-            discoverPage.appendChild(goBackButton);
-
-            discoverPage.style.opacity = "0";
-            document.body.appendChild(discoverPage);
-
-            setTimeout(() => {
-                discoverPage.style.opacity = "1";
-            }, 50);
         }
     </script>
 </head>
@@ -234,7 +216,7 @@
         <img src="fontbolt.png" alt="Main Logo">
     </div>
 
-    <button class="eligibility-check" onclick="checkEligibility()">Check Eligibility</button>
+    <button class="eligibility-check" onclick="navigateToDiscover()">Check Eligibility</button>
 
     <div class="content">
         <img src="gem.gif" alt="Gem Animation" class="gem" onclick="navigateToDiscover()">
@@ -245,3 +227,4 @@
     </div>
 </body>
 </html>
+
