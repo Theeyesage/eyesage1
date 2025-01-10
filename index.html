@@ -6,6 +6,12 @@
     <title>Eyesage</title>
     <link rel="icon" href="88aebe15-cdda-415d-a69f-2eb4cee7ae46.png" type="image/png">
     <style>
+        /* 1. Load the dune_rise font here (update the path to your font file if needed) */
+        @font-face {
+            font-family: 'dune_rise';
+            src: url('dune_rise.ttf') format('truetype');
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -68,12 +74,39 @@
             z-index: 1;
         }
 
+        /* Wrap gem in a container for the hover label */
+        .gem-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
         .gem {
             width: 150px;
             height: 150px;
             margin-top: 15px;
             cursor: pointer;
             z-index: 2;
+        }
+
+        /* Hover "ENTER" label using dune_rise font, bigger size */
+        .enter-label {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            transform: translate(-50%, -10px);
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            /* Use the custom dune_rise font */
+            font-family: 'dune_rise', sans-serif;
+            font-size: 30px; /* Increased size */
+            pointer-events: none; 
+            opacity: 0; 
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .gem-wrapper:hover .enter-label {
+            opacity: 1; /* Smooth fade-in on hover */
         }
 
         .footer {
@@ -113,8 +146,8 @@
         }
 
         .sculpture:hover {
-            transform: scale(1.1); /* Hover effect: pop out slightly */
-            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3); /* Add shadow */
+            transform: scale(1.1);
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
         }
 
         #sculpture1 {
@@ -155,7 +188,7 @@
     </style>
     <script>
         const whitelist = [
-            "0x1cf3f9A2Fb8DF092c40eA20F8CbD5f4e831e1Ab8".toLowerCase(), // Replace with actual wallet addresses
+            "0x1cf3f9A2Fb8DF092c40eA20F8CbD5f4e831e1Ab8".toLowerCase(),
             "0xfa2336eCA18b9BC384144Ad7f29E2137EE0564D1".toLowerCase(),
             "0xC6732D05863B7906Dc6C986C09155429B4939631".toLowerCase(),
             "0x32d9bDffe9Ca0487C1154caBf7c97C73B3313396".toLowerCase(),
@@ -222,7 +255,10 @@
     <button class="eligibility-check" onclick="navigateToDiscover()">Check Eligibility</button>
 
     <div class="content">
-        <img src="gem.gif" alt="Gem Animation" class="gem" onclick="navigateToDiscover()">
+        <div class="gem-wrapper">
+            <img src="gem.gif" alt="Gem Animation" class="gem" onclick="navigateToDiscover()">
+            <div class="enter-label">ENTER</div>
+        </div>
     </div>
 
     <div class="footer">
@@ -230,4 +266,3 @@
     </div>
 </body>
 </html>
-
