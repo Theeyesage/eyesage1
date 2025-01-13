@@ -23,7 +23,7 @@
       overflow: hidden;
     }
 
-    /* Main page background (before discovering) */
+    /* MAIN PAGE BACKGROUND (unchanged) */
     .background {
       position: fixed;
       top: 0;
@@ -66,7 +66,6 @@
       cursor: pointer;
       z-index: 3;
     }
-
     .eligibility-check:hover {
       background: rgba(255, 255, 255, 1);
     }
@@ -109,7 +108,6 @@
       opacity: 0;
       transition: opacity 0.4s ease-in-out;
     }
-
     .gem-wrapper:hover .enter-label {
       opacity: 1; /* Smooth fade-in on hover */
     }
@@ -126,9 +124,12 @@
       z-index: 2;
     }
 
-    /* Discovery page container:
-       We remove the background property here (previously was url(...))
-       and just use it as a full-screen overlay. */
+    /* 
+      DISCOVERY PAGE 
+      - Fills the entire screen
+      - We'll use background-size: cover for the big palace image
+      - We'll absolutely position the sculptures in percentages
+    */
     .discover-page {
       position: fixed;
       top: 0;
@@ -143,41 +144,41 @@
       transition: opacity 0.5s ease-in-out;
     }
 
-    /* Inside .discover-page, we place a .scene-wrapper with the background as an <img> */
+    /* Scene wrapper that fully occupies the .discover-page */
     .scene-wrapper {
       position: relative;
-      /* Let the scene scale to 80% of the viewport width, up to a max if desired */
-      width: 80vw;
-      max-width: 1400px; /* optional maximum */
-      height: auto;      /* will scale with the image */
-    }
-
-    .scene-bg {
       width: 100%;
-      height: auto;
-      display: block;
+      height: 100%;
+
+      /* Replace this with your new background image (the temple interior).
+         We use "cover" so it fills all space, but edges can get cropped if
+         the aspect ratio doesn't match the screen. */
+      background: url("DALL·E 2025-01-09 23.59.10 - A detailed anime-style interior view of a dystopian post-apocalyptic palace. The perspective is from someone just entering the grand hall. The design .webp")
+        no-repeat center center;
+      background-size: cover;
     }
 
-    /* Sculptures as absolutely positioned elements inside .scene-wrapper */
+    /* Sculptures as absolutely positioned inside the .scene-wrapper */
     .sculpture {
       position: absolute;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .sculpture:hover {
       transform: scale(1.1);
       box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
     }
 
-    /* Example positions: Adjust these percentages so they line up
-       exactly with the background's "sculptures" in the image. */
+    /*
+      Tweak these positions so they match EXACTLY where the background
+      statues appear. Use your dev tools to adjust.
+    */
     #sculpture1 {
-      top: 40%;
-      left: 30%;
-      width: 10%;
+      top: 40%;    /* e.g. 40% down the container */
+      left: 30%;   /* e.g. 30% from the left side */
+      width: 10%;  /* approx. size as fraction of container width */
       height: auto;
-      transform: translate(-50%, -50%); /* centers it on that point if needed */
+      transform: translate(-50%, -50%);
     }
 
     #sculpture2 {
@@ -203,13 +204,12 @@
       cursor: pointer;
       z-index: 3;
     }
-
     .go-back:hover {
       background: rgba(0, 0, 0, 0.9);
     }
   </style>
 
-  <!-- Load ethers via UMD build -->
+  <!-- Use the UMD build of ethers v5 -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
   <script>
@@ -246,26 +246,18 @@
             const discoverPage = document.createElement("div");
             discoverPage.className = "discover-page";
 
-            // Create a scene wrapper
+            // .scene-wrapper fills the entire discoverPage
             const sceneWrapper = document.createElement("div");
             sceneWrapper.className = "scene-wrapper";
             discoverPage.appendChild(sceneWrapper);
 
-            // Insert the background as an <img>
-            const sceneBg = document.createElement("img");
-            sceneBg.className = "scene-bg";
-            sceneBg.src =
-              "DALL·E 2025-01-09 23.59.10 - A detailed anime-style interior view of a dystopian post-apocalyptic palace. The perspective is from someone just entering the grand hall. The design .webp";
-            sceneBg.alt = "Interior Dystopian Palace";
-            sceneWrapper.appendChild(sceneBg);
-
-            // Sculpture 1 (cropped image)
+            // Sculpture 1
             const sculpture1 = document.createElement("div");
             sculpture1.id = "sculpture1";
             sculpture1.className = "sculpture";
             sculpture1.onclick = () => window.location.href = "montecarlo.html";
 
-            // Place an <img> inside sculpture1
+            // Insert your cropped statue image
             const sculpture1Img = document.createElement("img");
             sculpture1Img.src = "sculpture1.png";
             sculpture1Img.alt = "Sculpture 1";
@@ -275,13 +267,12 @@
 
             sceneWrapper.appendChild(sculpture1);
 
-            // Sculpture 2 (cropped image)
+            // Sculpture 2
             const sculpture2 = document.createElement("div");
             sculpture2.id = "sculpture2";
             sculpture2.className = "sculpture";
             sculpture2.onclick = () => window.location.href = "nftgallery.html";
 
-            // Place an <img> inside sculpture2
             const sculpture2Img = document.createElement("img");
             sculpture2Img.src = "sculpture2.png";
             sculpture2Img.alt = "Sculpture 2";
@@ -301,6 +292,7 @@
             discoverPage.style.opacity = "0";
             document.body.appendChild(discoverPage);
 
+            // Fade in
             setTimeout(() => {
               discoverPage.style.opacity = "1";
             }, 50);
@@ -317,7 +309,9 @@
     }
   </script>
 </head>
+
 <body>
+  <!-- Main Page Background -->
   <div class="background"></div>
 
   <div class="header">
@@ -345,4 +339,5 @@
   </div>
 </body>
 </html>
+
 
