@@ -1,278 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eyesage</title>
-    <link rel="icon" href="88aebe15-cdda-415d-a69f-2eb4cee7ae46.png" type="image/png">
-    <style>
-        /* 1. Load the dune_rise font here (update the path to your font file if needed) */
-        @font-face {
-            font-family: 'Dune_Rise';
-            src: url('Dune_Rise.woff') format('woff');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eyesage</title>
+  <link
+    rel="icon"
+    href="88aebe15-cdda-415d-a69f-2eb4cee7ae46.png"
+    type="image/png"
+  />
+  <style>
+    /* 1. Load the dune_rise font here (update the path to your font file if needed) */
+    @font-face {
+      font-family: "Dune_Rise";
+      src: url("Dune_Rise.woff") format("woff");
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp")
+        no-repeat center center/cover;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 10px 0;
+      z-index: 2;
+    }
+
+    .header img {
+      height: 50px;
+    }
+
+    .eligibility-check {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      transition: background 0.3s;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .eligibility-check:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      z-index: 1;
+    }
+
+    /* Wrap gem in a container for the hover label */
+    .gem-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .gem {
+      width: 150px;
+      height: 150px;
+      margin-top: 15px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    /* Hover "ENTER" label using dune_rise font, bigger size */
+    .enter-label {
+      position: absolute;
+      left: 50%;
+      bottom: 100%;
+      transform: translate(-50%, -10px);
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      /* Use the custom dune_rise font */
+      font-family: "dune_rise", sans-serif;
+      font-size: 30px; /* Increased size */
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .gem-wrapper:hover .enter-label {
+      opacity: 1; /* Smooth fade-in on hover */
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      color: white;
+      font-size: 14px;
+      z-index: 2;
+    }
+
+    .discover-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("DALL·E 2025-01-09 23.59.10 - A detailed anime-style interior view of a dystopian post-apocalyptic palace. The perspective is from someone just entering the grand hall. The design .webp")
+        no-repeat center center/cover;
+      background-size: cover;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .sculpture {
+      position: absolute; /* anchored in the .discover-page container */
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .sculpture:hover {
+      transform: scale(1.1);
+      box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Updated statue positions in fixed pixels to avoid shifting */
+    #sculpture1 {
+      background-image: url("sculpture1.png"); /* Replace with relative path */
+      top: 200px; /* Adjust to your desired fixed pixel offset */
+      left: 50px;
+      width: 270px;
+      height: 470px;
+    }
+
+    #sculpture2 {
+      background-image: url("sculpture2.png"); /* Replace with relative path */
+      top: 200px; /* Adjust to your desired fixed pixel offset */
+      right: 50px;
+      width: 270px;
+      height: 470px;
+    }
+
+    .go-back {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      transition: background 0.3s;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .go-back:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
+  </style>
+
+  <!-- Include ethers.js (for example via CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+  <script>
+    // Replace with your actual Eyesage NFT contract address
+    const EYESAGE_CONTRACT_ADDRESS = "0xEYESAGE_CONTRACT_ADDRESS";
+
+    // Minimal ERC-721 ABI for checking balance
+    const EYESAGE_CONTRACT_ABI = [
+      "function balanceOf(address owner) view returns (uint256)"
+    ];
+
+    async function navigateToDiscover() {
+      if (typeof window.ethereum !== "undefined" && window.ethereum.isMetaMask) {
+        try {
+          // Request account access
+          const accounts = await window.ethereum.request({
+            method: "eth_requestAccounts",
+          });
+          const walletAddress = accounts[0].toLowerCase();
+
+          // Use ethers.js to check if this wallet holds an Eyesage NFT
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const contract = new ethers.Contract(
+            EYESAGE_CONTRACT_ADDRESS,
+            EYESAGE_CONTRACT_ABI,
+            provider
+          );
+
+          const balance = await contract.balanceOf(walletAddress);
+
+          // If balance > 0, the user holds an Eyesage NFT
+          if (balance.gt(0)) {
+            const discoverPage = document.createElement("div");
+            discoverPage.className = "discover-page";
+
+            // Sculpture 1
+            const sculpture1 = document.createElement("div");
+            sculpture1.id = "sculpture1";
+            sculpture1.className = "sculpture";
+            sculpture1.onclick = () => (window.location.href = "montecarlo.html");
+            discoverPage.appendChild(sculpture1);
+
+            // Sculpture 2
+            const sculpture2 = document.createElement("div");
+            sculpture2.id = "sculpture2";
+            sculpture2.className = "sculpture";
+            sculpture2.onclick = () => (window.location.href = "nftgallery.html");
+            discoverPage.appendChild(sculpture2);
+
+            // Go Back Button
+            const goBackButton = document.createElement("button");
+            goBackButton.textContent = "Go Back";
+            goBackButton.className = "go-back";
+            goBackButton.onclick = () => discoverPage.remove();
+            discoverPage.appendChild(goBackButton);
+
+            discoverPage.style.opacity = "0";
+            document.body.appendChild(discoverPage);
+
+            setTimeout(() => {
+              discoverPage.style.opacity = "1";
+            }, 50);
+          } else {
+            alert("Access Denied: You do not hold an Eyesage NFT.");
+          }
+        } catch (error) {
+          console.error("Error connecting to MetaMask:", error);
+          alert("An error occurred while connecting to your wallet. Please try again.");
         }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('DALL·E 2024-12-08 22.08.29 - A detailed anime-style desert landscape with a direct frontal view. The scene includes a grand, decaying temple on a rocky plateau in the center, surr.webp') no-repeat center center/cover;
-            background-size: cover;
-            z-index: -1;
-        }
-
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 10px 0;
-            z-index: 2;
-        }
-
-        .header img {
-            height: 50px;
-        }
-
-        .eligibility-check {
-            position: fixed;
-            top: 10px;
-            right: 20px;
-            padding: 10px 20px;
-            font-size: 18px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            transition: background 0.3s;
-            cursor: pointer;
-            z-index: 3;
-        }
-
-        .eligibility-check:hover {
-            background: rgba(255, 255, 255, 1);
-        }
-
-        .content {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 80vh;
-            z-index: 1;
-        }
-
-        /* Wrap gem in a container for the hover label */
-        .gem-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .gem {
-            width: 150px;
-            height: 150px;
-            margin-top: 15px;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        /* Hover "ENTER" label using dune_rise font, bigger size */
-        .enter-label {
-            position: absolute;
-            left: 50%;
-            bottom: 100%;
-            transform: translate(-50%, -10px);
-            color: #fff;
-            font-weight: bold;
-            text-transform: uppercase;
-            /* Use the custom dune_rise font */
-            font-family: 'dune_rise', sans-serif;
-            font-size: 30px; /* Increased size */
-            pointer-events: none; 
-            opacity: 0; 
-            transition: opacity 0.4s ease-in-out;
-        }
-
-        .gem-wrapper:hover .enter-label {
-            opacity: 1; /* Smooth fade-in on hover */
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            color: white;
-            font-size: 14px;
-            z-index: 2;
-        }
-
-        .discover-page {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('DALL·E 2025-01-09 23.59.10 - A detailed anime-style interior view of a dystopian post-apocalyptic palace. The perspective is from someone just entering the grand hall. The design .webp') no-repeat center center/cover;
-            background-size: cover;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .sculpture {
-            position: absolute;
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .sculpture:hover {
-            transform: scale(1.1);
-            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        #sculpture1 {
-            background-image: url('sculpture1.png'); /* Replace with relative path */
-            top: calc(33%);
-            left: -0.2%;
-            width: 270px;
-            height: 470px;
-        }
-
-        #sculpture2 {
-            background-image: url('sculpture2.png'); /* Replace with relative path */
-            top: calc(33%);
-            right: -0.2%;
-            width: 270px;
-            height: 470px;
-        }
-
-        .go-back {
-            position: fixed;
-            top: 10px;
-            right: 20px;
-            padding: 10px 20px;
-            font-size: 18px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-            transition: background 0.3s;
-            cursor: pointer;
-            z-index: 3;
-        }
-
-        .go-back:hover {
-            background: rgba(0, 0, 0, 0.9);
-        }
-    </style>
-    <script>
-        const whitelist = [
-            "0x1cf3f9A2Fb8DF092c40eA20F8CbD5f4e831e1Ab8".toLowerCase(),
-            "0xfa2336eCA18b9BC384144Ad7f29E2137EE0564D1".toLowerCase(),
-            "0xC6732D05863B7906Dc6C986C09155429B4939631".toLowerCase(),
-            "0x32d9bDffe9Ca0487C1154caBf7c97C73B3313396".toLowerCase(),
-            "0x770Ede7DcF172af5511345d6378850190DC62fCE".toLowerCase(),
-            "0x4d987C2a20B0572a554A398FF3B57ff65fc4f0b7".toLowerCase(),
-            "0xa63b5625f0656c5172fc745b2e46078758fc5d3f".toLowerCase(),
-            "0x0cf68416279c2A9bcDd0Fa6cC4E0347ac3d55D7d".toLowerCase(),
-            "0x8a3F8049D0af0f331e2462f7B66e1D12Eb605acA".toLowerCase(),
-            "0x13A1341Ff4B7FaD321785e258bBCd316d5ace218".toLowerCase(),
-            "0x13F1A0f14D36c25611357550D90A53E042d5a6d6".toLowerCase(),
-            "0xba4fB537EA10aCCc9b2AF409a54E32AC3413C9b7".toLowerCase(),
-            "0x5Aa421510BD53300f4E01A27EFC93Ab794aDB9F6".toLowerCase(),
-
-
-        ];
-
-        async function navigateToDiscover() {
-            if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
-                try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const walletAddress = accounts[0].toLowerCase();
-
-                    if (whitelist.includes(walletAddress)) {
-                        const discoverPage = document.createElement("div");
-                        discoverPage.className = "discover-page";
-
-                        // Sculpture 1
-                        const sculpture1 = document.createElement("div");
-                        sculpture1.id = "sculpture1";
-                        sculpture1.className = "sculpture";
-                        sculpture1.onclick = () => window.location.href = "montecarlo.html";
-                        discoverPage.appendChild(sculpture1);
-
-                        // Sculpture 2
-                        const sculpture2 = document.createElement("div");
-                        sculpture2.id = "sculpture2";
-                        sculpture2.className = "sculpture";
-                        sculpture2.onclick = () => window.location.href = "nftgallery.html";
-                        discoverPage.appendChild(sculpture2);
-
-                        // Go Back Button
-                        const goBackButton = document.createElement("button");
-                        goBackButton.textContent = "Go Back";
-                        goBackButton.className = "go-back";
-                        goBackButton.onclick = () => discoverPage.remove();
-                        discoverPage.appendChild(goBackButton);
-
-                        discoverPage.style.opacity = "0";
-                        document.body.appendChild(discoverPage);
-
-                        setTimeout(() => {
-                            discoverPage.style.opacity = "1";
-                        }, 50);
-                    } else {
-                        alert("Access Denied: Your wallet is not whitelisted.");
-                    }
-                } catch (error) {
-                    console.error("Error connecting to MetaMask:", error);
-                    alert("An error occurred while connecting to your wallet. Please try again.");
-                }
-            } else {
-                alert("MetaMask is not installed or not detected. Please install MetaMask to proceed.");
-            }
-        }
-    </script>
+      } else {
+        alert("MetaMask is not installed or not detected. Please install MetaMask to proceed.");
+      }
+    }
+  </script>
 </head>
 <body>
-    <div class="background"></div>
+  <div class="background"></div>
 
-    <div class="header">
-        <img src="fontbolt.png" alt="Main Logo">
+  <div class="header">
+    <img src="fontbolt.png" alt="Main Logo" />
+  </div>
+
+  <button class="eligibility-check" onclick="navigateToDiscover()">
+    Check Eligibility
+  </button>
+
+  <div class="content">
+    <div class="gem-wrapper">
+      <img
+        src="gem.gif"
+        alt="Gem Animation"
+        class="gem"
+        onclick="navigateToDiscover()"
+      />
+      <div class="enter-label">ENTER</div>
     </div>
+  </div>
 
-    <button class="eligibility-check" onclick="navigateToDiscover()">Check Eligibility</button>
-
-    <div class="content">
-        <div class="gem-wrapper">
-            <img src="gem.gif" alt="Gem Animation" class="gem" onclick="navigateToDiscover()">
-            <div class="enter-label">ENTER</div>
-        </div>
-    </div>
-
-    <div class="footer">
-        &copy; 2024 Eyesage. All rights reserved.
-    </div>
+  <div class="footer">
+    &copy; 2024 Eyesage. All rights reserved.
+  </div>
 </body>
 </html>
